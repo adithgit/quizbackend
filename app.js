@@ -47,7 +47,7 @@ app.use((error, req, res, next) => {
     //     console.log("\x1b[31mport " + error.port + " is already in use\x1b[0m");
     // });
 
-app.listen(8080, ()=>{
+app.listen(process.env.PORT || 8080, ()=>{
     console.log("app running on port 8080");
 }).on('error',(err)=>{
     console.log(err);
