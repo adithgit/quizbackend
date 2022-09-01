@@ -2,7 +2,9 @@ const userServices = require("../services/user");
 
 exports.register = async (req, res, next) => {
     // Creating new user
-    await userServices.createUser(req, res, next);
+    await userServices.createUser(req, res, (err)=>{
+        return res.status(401).send(err);
+    });
 
     // authenticate new user
     userServices.login(req, res, next, (e, user) => {
