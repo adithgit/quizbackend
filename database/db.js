@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
 const connect = () => {
-    const mongoUri = "mongodb+srv://otto:ottopass@cluster0.jutm2kp.mongodb.net/?retryWrites=true&w=majority"; 
+    const mongoUri = "mongodb://127.0.0.1:27017/quiz"; 
     // URL changed 
     const options = {
         useNewUrlParser: true,

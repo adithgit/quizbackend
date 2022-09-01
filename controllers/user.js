@@ -1,26 +1,37 @@
 const userServices = require("../services/user");
 
 exports.register = async (req, res, next) => {
-    // Creating new user
-    await userServices.createUser(req, res, next);
-
-    // authenticate new user
-    userServices.login(req, res, next, (e, user) => {
-        if (e) return next(e);
-
-        // Sending the new user as response
-        res.status(201).json(user);
-    });
+    try{
+        // Creating new user
+        await userServices.createUser(req, res, (e)=>{
+            throw new Error(e)
+        });
+        
+        // authenticate new user
+        userServices.login(req, res, next, (e, user) => {
+            if (e) throw new Error(e);
+            
+            // Sending the new user as response
+            res.status(201).json(user);
+        });
+    }catch(e){
+        res.status(409).json(e.toString());
+    }
 }
 
 exports.login = (req, res, next) => {
     // User authentication
-    userServices.login(req, res, next, (e, user) => {
-        if (e) return next(e);
-
-        // Sending user data as response
-        res.status(200).json(user);
-    });
+    try{
+        userServices.login(req, res, next, (e, user) => {
+            if (e) throw new Error(e);
+    
+            // Sending user data as response
+            res.status(200).json(user);
+        });
+    }
+    catch(e){
+        res.status(409).json(e.toString());
+    }
 }
 
 exports.getAuth = (req, res) => res.status(200).json({
