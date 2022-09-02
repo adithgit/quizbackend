@@ -15,7 +15,7 @@ exports.addCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
     try {
         let result = await questionsServices.getCategories();
-        res.status(200).send({message: result});
+        res.status(200).send({ message: result });
     } catch (e) {
         res.status(401).send({ message: e.toString() });
     }
@@ -25,8 +25,8 @@ exports.addSubCategories = async (req, res) => {
     if (!req.body.catId || !req.body.subName) return res.status(401).json({ message: 'catId or subName not defined' });
     try {
         const result = await questionsServices.addSubCategory(req.body.catId, req.body.subName);
-        res.status(200).json({message: result});
-        
+        res.status(200).json({ message: result });
+
     } catch (e) {
         res.status(500).send({ message: e.toString() });
     }
@@ -38,7 +38,7 @@ exports.getSubCategories = async (req, res) => {
         const result = await questionsServices.getSubCategory(req.params.catId);
         res.status(200).json({ message: result });
     } catch (e) {
-         res.status(500).send({ message: e.toString() });
+        res.status(500).send({ message: e.toString() });
     }
 }
 
@@ -47,9 +47,9 @@ exports.addQuestion = async (req, res) => {
     if (!questionDef || !options || !answerIndex || !subCat) return res.status(401).json({ message: 'questionData not defined' });
     try {
         const result = await questionsServices.addQuestions(subCat, { questionDef, options, answerIndex, subCat });
-        res.status(200).json({ message: result});
+        res.status(200).json({ message: result });
     } catch (e) {
-        res.status(500).send({ message: e.toString()});
+        res.status(500).send({ message: e.toString() });
     }
 }
 
@@ -74,12 +74,12 @@ exports.removeCategory = async (req, res) => {
 }
 
 exports.removeSubCategory = async (req, res) => {
-    if(!req.params.subId) return res.status(401).send({ message: 'Subcategory id not defined' });
+    if (!req.params.subId) return res.status(401).send({ message: 'Subcategory id not defined' });
     try {
         const result = await questionsServices.removeSubCategory(req.params.catId);
         res.status(200).send({ message: result })
-    } catch(e){
-        res.status(500).send({ message: e.toString()})
+    } catch (e) {
+        res.status(500).send({ message: e.toString() })
     }
 }
 exports.removeQuestion = async (req, res) => {
@@ -88,6 +88,16 @@ exports.removeQuestion = async (req, res) => {
         await questionsServices.removeQuestion(req.params.questionId);
         res.status(200).send({ message: 'Question removed' });
     } catch (e) {
-         res.status(500).send({message: e.toString() });
+        res.status(500).send({ message: e.toString() });
+    }
+}
+
+exports.triggerSubCategory = async (req, res) => {
+    if (!req.params.subId) return res.status(401).send({ message: 'Subcategory id not defined' });
+    try {
+        const result = await questionsServices.triggerSubCategory(req.params.subId);
+        res.status(200).send({ message: result });
+    } catch (e) {
+        res.status(500).send({ message: e.toString() });
     }
 }

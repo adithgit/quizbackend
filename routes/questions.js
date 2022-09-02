@@ -21,6 +21,6 @@ router.post('/add/subcategory',questionsController.addSubCategories);
 router.get('/remove/category/:catId',questionsController.removeCategory);
 router.get('/remove/subcategory/:subId',questionsController.removeSubCategory);
 router.get('/remove/question/:questionId',questionsController.removeQuestion);
-
-
+// Change the active parameter of subcategory
+router.get('/trigger/:subId', questionsController.triggerSubCategory); 
 module.exports = router;

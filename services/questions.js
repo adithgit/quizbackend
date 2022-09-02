@@ -41,9 +41,9 @@ exports.addSubCategory = (catId, subcatName)=>{
 
 exports.getSubCategory = (categoryId)=>{
     return new Promise((resolve, reject)=>{
-        Category.find({_id: categoryId}, (err, docs)=>{
+        Category.findOne({_id: categoryId }, (err, docs)=>{
             if(err || docs.length==0) return reject(err || 'categoryId not valid');
-            resolve(docs[0].subCategories);
+            resolve(docs.subCategories);
         })
     })
 }
@@ -67,7 +67,7 @@ exports.addQuestions = (subId, questionData)=>{
             subCat: questionData.subCat
         }).save((err, results)=>{
             if(err) return reject(err);
-            Subcat.updateOne({_id: subId}, {$push: {questions: results._id}}, (err, res)=>{
+            Subcat.updateOne({_id: subId}, {$push: {questions: results._id}, $inc: {time: 4}}, (err, res)=>{
                 resolve(results);
             });
         })
@@ -93,16 +93,16 @@ exports.removeQuestion = (questionId)=>{
 exports.removeCategory = (categoryId)=>{
     return new Promise((resolve, reject)=>{
         Category.findOneAndDelete({_id: categoryId}, (err, result)=>{
-            if(err || !result ) return reject(err || "Cannot find category");
+            if(err || !result ) return reject(err || "Cannot find category :: either it do not exist or id not correct");
             if(result.subCategories.length == 0) return resolve({message: 'Category removed'});
             let message = 'Category removed';
             const subCatIds = result.subCategories;
             Subcat.deleteMany({_id: {$in: result.subCategories}}, (err, result)=>{
                 if(err) return reject(err);
-                message += `\n Number of subcategory removed : ${result.deletedCount}`
+                message += `:: Number of subcategory removed : ${result.deletedCount}`
                 Questions.deleteMany({subCat: {$in: subCatIds}},(err, result)=>{
                     if(err) return reject(err);
-                    message += `\n Number of questions removed : ${result.deletedCount}`;
+                    message += `:: Number of questions removed : ${result.deletedCount}`;
                     resolve(message)
                 })
             })
@@ -124,6 +124,19 @@ exports.removeSubCategory = (subCatId)=>{
                     resolve(message)
                 })
             })
+        })
+    })
+}
+
+exports.triggerSubCategory = (subCatId)=>{
+    return new Promise((resolve, reject)=>{
+        let active = false;
+        Subcat.findOne({_id: subCatId}, (err, result)=>{
+            if(err) return reject(err);
+        })
+        Subcat.updateOne({_id: subCatId}, [{$set: {active: {$not : "$active"}}}], (err, result)=>{
+            if(err) return reject(err);
+            resolve(result);
         })
     })
 }

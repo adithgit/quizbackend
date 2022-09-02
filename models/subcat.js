@@ -8,7 +8,15 @@ const subcatSchema = new Schema({
     questions: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Questions'
-    }]
+    }],
+    active: {
+        type: Boolean,
+        default: true
+    },
+    time: {
+        type: Number,
+        default: 0
+    }
 });
 
 
