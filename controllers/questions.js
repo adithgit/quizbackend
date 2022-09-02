@@ -3,7 +3,7 @@ const questionsServices = require('../services/questions');
 
 
 exports.addCategory = async (req, res) => {
-    if (!req.body.catName) res.status(400).json({ message: 'catName not defined' });
+    if (!req.body.catName) return res.status(400).json({ message: 'catName not defined' });
     try {
         let result = await questionsServices.addCategory(req.body.catName);
         res.status(200).json({ message: result });
@@ -79,7 +79,7 @@ exports.removeSubCategory = async (req, res) => {
         const result = await questionsServices.removeSubCategory(req.params.catId);
         res.status(200).send({ message: result })
     } catch(e){
-        res.status(500).send({ message: e})
+        res.status(500).send({ message: e.toString()})
     }
 }
 exports.removeQuestion = async (req, res) => {
@@ -88,6 +88,6 @@ exports.removeQuestion = async (req, res) => {
         await questionsServices.removeQuestion(req.params.questionId);
         res.status(200).send({ message: 'Question removed' });
     } catch (e) {
-         res.status(500).send({message: e });
+         res.status(500).send({message: e.toString() });
     }
 }

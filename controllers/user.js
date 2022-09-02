@@ -39,15 +39,3 @@ exports.getAuth = (req, res) => res.status(200).json({
     authToken: req.headers.authorization?.split(" ")[1]
 });
 
-
-// exports.adminLogin = (req, res, next) => {
-//     try {
-//         userServices.adminLogin(req, res, next, (e, user) =>{
-//             if(e) throw new Error("admin login failed");
-
-//             res.status(200).json(user);
-//         })
-//     } catch (e) {
-//         res.status(409).json(e.toString());
-//     }
-// }
