@@ -6,7 +6,7 @@ const Category = require('../models/category');
 exports.getCategories = ()=>{
     return new Promise((resolve, reject)=>{
         Category.find({}, (err, docs)=>{
-            if(err) return resolve(false);
+            if(err) return reject(err);
             resolve(docs);
         })
     })
@@ -18,7 +18,7 @@ exports.addCategory = (catName)=>{
             catName,
             subCategories:[]
         }).save((err, result)=>{
-            if(err) return resolve(false);
+            if(err) return reject(err);
             resolve(result);
         })
     })
@@ -30,9 +30,9 @@ exports.addSubCategory = (catId, subcatName)=>{
             subcatName,
             questions:[]
         }).save((err, result)=>{
-            if(err) return resolve(false);
+            if(err) return reject(err);
             Category.updateOne({_id:catId},{ $push :{ subCategories : result._id }}, (err, result)=>{
-             if(err) return resolve(false);
+             if(err) return reject(err);
             }) 
             resolve(result);
         })
@@ -42,7 +42,7 @@ exports.addSubCategory = (catId, subcatName)=>{
 exports.getSubCategory = (categoryId)=>{
     return new Promise((resolve, reject)=>{
         Category.find({_id: categoryId}, (err, docs)=>{
-            if(err || docs.length==0) return resolve(err || 'categoryId not valid');
+            if(err || docs.length==0) return reject(err || 'categoryId not valid');
             resolve(docs[0].subCategories);
         })
     })
@@ -66,7 +66,7 @@ exports.addQuestions = (subId, questionData)=>{
             answerIndex: questionData.answerIndex,
             subCat: questionData.subCat
         }).save((err, results)=>{
-            if(err) return resolve(false);
+            if(err) return reject(err);
             Subcat.updateOne({_id: subId}, {$push: {questions: results._id}}, (err, res)=>{
                 resolve(results);
             });
