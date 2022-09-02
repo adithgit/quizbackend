@@ -92,15 +92,36 @@ exports.removeQuestion = (questionId)=>{
 
 exports.removeCategory = (categoryId)=>{
     return new Promise((resolve, reject)=>{
-        Category.findOne({_id: categoryId}, (err, result)=>{
-            if(err) return reject(err);
-            Subcat.find({_id: {$in: result.subCategories}}, (err, result)=>{
-                if(err) return reject(err)
-                const subCatIds = result.map((obj)=>{
-                    return obj._id;
+        Category.findOneAndDelete({_id: categoryId}, (err, result)=>{
+            if(err || !result ) return reject(err || "Cannot find category");
+            if(result.subCategories.length == 0) return resolve({message: 'Category removed'});
+            let message = 'Category removed';
+            const subCatIds = result.subCategories;
+            Subcat.deleteMany({_id: {$in: result.subCategories}}, (err, result)=>{
+                if(err) return reject(err);
+                message += `\n Number of subcategory removed : ${result.deletedCount}`
+                Questions.deleteMany({subCat: {$in: subCatIds}},(err, result)=>{
+                    if(err) return reject(err);
+                    message += `\n Number of questions removed : ${result.deletedCount}`;
+                    resolve(message)
                 })
-                Questions.find({subCat: {$in: subCatIds}},(err, result)=>{
-                    console.log(result);
+            })
+        })
+    })
+}
+
+
+exports.removeSubCategory = (subCatId)=>{
+    return new Promise((resolve, reject)=>{
+        Category.updateOne({subCategories: subCatId}, {$pull : {subCategories : subCatId}}, (err, result)=>{
+            if(err || !result.acknowledged) return reject(err || 'cannot find subcategory');
+            Subcat.deleteOne({_id: subCatId}, (err, result)=>{
+                if(err || !result) return reject(err  || 'subcategory id incorrect')
+                let message = "Subcategory removed"
+                Questions.deleteMany({subCat: subCatId},(err, result)=>{
+                    if(err) return reject(err);
+                    message += `\n Number of questions removed : ${result.deletedCount}`;
+                    resolve(message)
                 })
             })
         })
