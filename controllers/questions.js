@@ -22,9 +22,9 @@ exports.getCategories = async (req, res) => {
 }
 
 exports.addSubCategories = async (req, res) => {
-    if (!req.body.catId || !req.body.subName) return res.status(401).json({ message: 'catId or subName not defined' });
+    if (!req.body.catId || !req.body.subName || !req.body.time) return res.status(401).json({ message: 'catId or subName or time not defined' });
     try {
-        const result = await questionsServices.addSubCategory(req.body.catId, req.body.subName);
+        const result = await questionsServices.addSubCategory(req.body.catId, req.body.subName, req.body.time);
         res.status(200).json({ message: result });
 
     } catch (e) {
@@ -96,6 +96,16 @@ exports.triggerSubCategory = async (req, res) => {
     if (!req.params.subId) return res.status(401).send({ message: 'Subcategory id not defined' });
     try {
         const result = await questionsServices.triggerSubCategory(req.params.subId);
+        res.status(200).send({ message: result });
+    } catch (e) {
+        res.status(500).send({ message: e.toString() });
+    }
+}
+
+exports.getActiveSubCategories = async (req, res)=>{
+    if(!req.params.catId) return res.status(401).send({ message: 'Category id not defined' });
+    try {
+        const result = await questionsServices.getActiveSubCategories(req.params.catId);
         res.status(200).send({ message: result });
     } catch (e) {
         res.status(500).send({ message: e.toString() });

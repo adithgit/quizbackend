@@ -11,12 +11,9 @@ const subcatSchema = new Schema({
     }],
     active: {
         type: Boolean,
-        default: true
+        default: false
     },
-    time: {
-        type: Number,
-        default: 0
-    }
+    time: Number
 });
 
 

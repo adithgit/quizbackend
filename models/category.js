@@ -11,7 +11,8 @@ const categorySchema = new Schema({
     subCategories: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subcat'
-    }]
+    }],
+    imageURL: String
 });
 
 

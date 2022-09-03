@@ -24,11 +24,12 @@ exports.addCategory = (catName)=>{
     })
 }
 
-exports.addSubCategory = (catId, subcatName)=>{
+exports.addSubCategory = (catId, subcatName, time)=>{
     return new Promise((resolve, reject)=>{
         new Subcat({
             subcatName,
-            questions:[]
+            questions:[],
+            time
         }).save((err, result)=>{
             if(err) return reject(err);
             Category.updateOne({_id:catId},{ $push :{ subCategories : result._id }}, (err, result)=>{
@@ -57,7 +58,6 @@ exports.getQuestions = (subId)=>{
     })
 }
 
-
 exports.addQuestions = (subId, questionData)=>{
     return new Promise((resolve, reject)=>{
         new Questions({
@@ -67,7 +67,7 @@ exports.addQuestions = (subId, questionData)=>{
             subCat: questionData.subCat
         }).save((err, results)=>{
             if(err) return reject(err);
-            Subcat.updateOne({_id: subId}, {$push: {questions: results._id}, $inc: {time: 4}}, (err, res)=>{
+            Subcat.updateOne({_id: subId}, {$push: {questions: results._id} }, (err, res)=>{
                 resolve(results);
             });
         })
@@ -130,13 +130,25 @@ exports.removeSubCategory = (subCatId)=>{
 
 exports.triggerSubCategory = (subCatId)=>{
     return new Promise((resolve, reject)=>{
-        let active = false;
         Subcat.findOne({_id: subCatId}, (err, result)=>{
             if(err) return reject(err);
         })
         Subcat.updateOne({_id: subCatId}, [{$set: {active: {$not : "$active"}}}], (err, result)=>{
             if(err) return reject(err);
             resolve(result);
+        })
+    })
+}
+
+exports.getActiveSubCategories = (catId)=>{
+    return new Promise((resolve, reject)=>{
+        Category.findOne({_id: catId}, (err, result)=>{
+            if(err || !result) return reject(err || "Category id invalid");
+            const subIds = result.subCategories;
+            Subcat.find({_id: {$in: subIds}, active: true}, (err, result)=>{
+                if(err) return reject(err);
+                resolve(result)
+            })
         })
     })
 }

@@ -23,4 +23,7 @@ router.get('/remove/subcategory/:subId',questionsController.removeSubCategory);
 router.get('/remove/question/:questionId',questionsController.removeQuestion);
 // Change the active parameter of subcategory
 router.get('/trigger/:subId', questionsController.triggerSubCategory); 
+// Get active subcateogories 
+router.get('/subcategory/active/:catId', questionsController.getActiveSubCategories);
+
 module.exports = router;
