@@ -3,6 +3,7 @@ const router = express.Router();
 const questionsController = require("../controllers/questions");
 const userController = require("../controllers/user");
 const authenticateUser = require("../middlewares/authenticateUser");
+const authenticateAdmin = require("../middlewares/athenticateAdmin");
 
 // Authentication Middleware
 router.use(authenticateUser);
@@ -15,6 +16,11 @@ router.get('/auth', userController.getAuth);
 router.get('/category', questionsController.getCategories);
 router.get('/subcategory/:catId', questionsController.getSubCategories);
 router.get('/quiz/:subId', questionsController.getQuestions);
+
+// Admin Authentication
+router.use(authenticateAdmin);
+
+// Private Routes
 router.post('/add/question',questionsController.addQuestion);
 router.post('/add/category',questionsController.addCategory);
 router.post('/add/subcategory',questionsController.addSubCategories);

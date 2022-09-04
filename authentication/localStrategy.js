@@ -9,8 +9,9 @@ const userLocalStrategy = () => new localStrategy(
     },
     async (email, password, done) => {
         try {
+            if( !email || !password) return done('Email or password not defined');
             // Finding user with email
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email: email });
 
             // Throwing an error if there is no user with the provided email address
             if (!user) throw new UnauthorizedError('User login unauthorized, account not found!', 'Unauthorized');

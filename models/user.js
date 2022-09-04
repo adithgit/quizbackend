@@ -24,6 +24,10 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, 'you must provide {PATH}'],
+    },
+    admin: {
+        type: String,
+        default: false
     }
 });
 

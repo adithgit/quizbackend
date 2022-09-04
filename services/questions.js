@@ -6,7 +6,7 @@ const Category = require('../models/category');
 exports.getCategories = ()=>{
     return new Promise((resolve, reject)=>{
         Category.find({}, (err, docs)=>{
-            if(err) return reject(err);
+            if(err || docs.length < 1) return reject(err || 'No categories are present');
             resolve(docs);
         })
     })
@@ -43,7 +43,7 @@ exports.addSubCategory = (catId, subcatName, time)=>{
 exports.getSubCategory = (categoryId)=>{
     return new Promise((resolve, reject)=>{
         Category.findOne({_id: categoryId }, (err, docs)=>{
-            if(err || docs.length==0) return reject(err || 'categoryId not valid');
+            if(err || !docs) return reject(err || 'categoryId not valid');
             resolve(docs.subCategories);
         })
     })
@@ -52,7 +52,7 @@ exports.getSubCategory = (categoryId)=>{
 exports.getQuestions = (subId)=>{
     return new Promise((resolve, reject)=>{
         Questions.find({subCat:subId}, (err, docs)=>{
-            if(err) return reject(err);
+            if(err || docs.length == 0) return reject(err || 'There are no questions in this subcategory');
             return resolve(docs);
         })
     })
@@ -131,7 +131,7 @@ exports.removeSubCategory = (subCatId)=>{
 exports.triggerSubCategory = (subCatId)=>{
     return new Promise((resolve, reject)=>{
         Subcat.findOne({_id: subCatId}, (err, result)=>{
-            if(err) return reject(err);
+            if(err || !result ) return reject(err || 'Subcategory id invalid.');
         })
         Subcat.updateOne({_id: subCatId}, [{$set: {active: {$not : "$active"}}}], (err, result)=>{
             if(err) return reject(err);

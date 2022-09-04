@@ -1,6 +1,7 @@
 const passport = require("passport");
 const signJwt = require("../authentication/jwt");
 const ConflictError = require("../errors/conflictError");
+const NotFoundError = require("../errors/notFoundError");
 const User = require("../models/user");
 
 exports.createUser = async (req, res, next) => {
@@ -24,21 +25,24 @@ exports.createUser = async (req, res, next) => {
 
 
 exports.login = (req, res, next, done) => {
-    passport.authenticate('login', (e, user) => {
+    passport.authenticate('login', (e, user, response) => {
         try {
-            if (e) return next(e);
-
-        // needs to finish
+            
+            if (e || !user) throw new NotFoundError(e || response.message);
             // Creating new authentication token
             signJwt(req, user, (e, token) => {
-                if (e) return done(e);
-
+                if(e) return done(e);
+                
                 const auth = {
                     _id: user._id,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
-                    authToken: token,
+                    authToken: token
+                }
+                
+                if(user.admin){
+                    auth.admin = true;
                 }
 
                 return done(null, auth);

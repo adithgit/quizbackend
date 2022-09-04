@@ -11,7 +11,9 @@ const userJwtStrategy = () => new JWTstrategy(
             return token;
         },
     },
-    async (token, done) => done(null, token.user)
+    async (token, done) =>{ 
+        done(null, token.user);
+    }
 );
 
 module.exports = userJwtStrategy;

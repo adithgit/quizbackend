@@ -40,15 +40,17 @@ app.use((error, req, res, next) => {
 
 // Serving
 // app
-    // .listen(port, () => {
-    //     console.log(`\x1b[32mserver is running on http://localhost:${port}\x1b[0m`);
-    // })
-    // .on("error", (error) => {
-    //     console.log("\x1b[31mport " + error.port + " is already in use\x1b[0m");
-    // });
+// .listen(port, () => {
+//     console.log(`\x1b[32mserver is running on http://localhost:${port}\x1b[0m`);
+// })
+// .on("error", (error) => {
+//     console.log("\x1b[31mport " + error.port + " is already in use\x1b[0m");
+// });
 
-app.listen(process.env.PORT || 8080, ()=>{
+
+
+app.listen(process.env.PORT || 8080, () => {
     console.log("app running on port 8080");
-}).on('error',(err)=>{
+}).on('error', (err) => {
     console.log(err);
 })
