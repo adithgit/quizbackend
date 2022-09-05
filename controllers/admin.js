@@ -5,12 +5,12 @@ exports.register = async (req, res, next) => {
         // has to send API key ie, adminKey in body of request
         if(req.body.adminKey != "adminKey") return res.status(401).send({message: 'adminKey invalid'});
         
-        // Creating new user
+        // Creating new admin
         await adminServices.createAdmin(req, res, (e) => {
             throw new Error(e)
         });
 
-        // authenticate new user
+        // authenticate new admin
         adminServices.login(req, res, next, (e, admin) => {
             if (e) throw new Error(e);
 

@@ -39,3 +39,12 @@ exports.deleteBanner = (bannerName)=>{
         })
     })
 }
+
+exports.getAll = ()=>{
+    return new Promise((resolve, reject)=>{
+        Banner.find({}, (err, result)=>{
+            if(err) return reject(err);
+            resolve(result);
+        })
+    })
+}

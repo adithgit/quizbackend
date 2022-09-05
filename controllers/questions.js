@@ -133,3 +133,13 @@ exports.editCategory = async(req, res)=>{
         res.status(500).send({ message: e.toString() });
     }
 }
+
+exports.addResult = async (req, res)=>{
+    req.body.user = req.user._id
+    try {
+        const result = await questionsServices.addResult(req.body);
+        res.status(200).send({ message: result });
+    } catch (e) {
+        res.status(500).send({ message: e.toString() });
+    }
+}

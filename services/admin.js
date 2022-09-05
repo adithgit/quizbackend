@@ -7,7 +7,6 @@ const Admin = require('../models/admin');
 exports.createAdmin = async (req, res, next) => {
     try {
         // Creating new user
-        console.log(req.body);
         const admin = await Admin.create(req.body);
 
         return admin;
@@ -28,9 +27,11 @@ exports.login = (req, res, next, done) => {
     passport.authenticate('adminLogin', (e, admin, response) => {
         try {
             if (e || !admin) throw new NotFoundError(e || response.message);
-            // Creating new authentication token
+            // for private routes -> adding an admin parameter to token.
             admin = admin.toObject();
             admin.admin = true;
+
+            // Creating new authentication token
             signJwt(req, admin, (e, token) => {
                 if(e) return done(e);
                 

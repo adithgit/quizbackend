@@ -19,7 +19,10 @@ const adminSchema = new Schema({
         type: String,
         required: [true, 'you must provide {PATH}'],
     },
-    admintype: String,
+    admintype: {
+        type: String,
+        required: true
+    },
 });
 
 adminSchema.pre('save', async function (next) {
@@ -38,7 +41,7 @@ adminSchema.methods.toJSON = function () {
 
 adminSchema.methods.isValidPassword = async function (password) {
     const user = this;
-    
+
     return await bcrypt.compare(password, user.password);
 }
 

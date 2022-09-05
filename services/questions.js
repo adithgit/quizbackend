@@ -1,6 +1,7 @@
 const Questions = require('../models/questions');
 const Subcat = require('../models/subcat');
 const Category = require('../models/category');
+const Result = require('../models/result');
 
 
 exports.getCategories = ()=>{
@@ -170,5 +171,15 @@ exports.editCategory = (catId, newName)=>{
             if(err) return reject(err);
             resolve(result);
         })
+    })
+}
+
+
+exports.addResult = (resultData)=>{
+    return new Promise((resolve, reject)=>{
+        new Result(resultData).save((err, result)=>{
+          if(err) return reject(err);
+          resolve(result);
+        });
     })
 }
