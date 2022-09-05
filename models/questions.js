@@ -18,7 +18,8 @@ const questionSchema = new Schema({
     subCat:{
         type: mongoose.Schema.Types.ObjectId,
         required: true
-    }
+    },
+    points: Number
 });
 
 

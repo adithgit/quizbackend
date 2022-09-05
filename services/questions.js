@@ -64,7 +64,8 @@ exports.addQuestions = (subId, questionData)=>{
             questionDef: questionData.questionDef,
             options: questionData.options,
             answerIndex: questionData.answerIndex,
-            subCat: questionData.subCat
+            subCat: questionData.subCat,
+            points: questionData.points
         }).save((err, results)=>{
             if(err) return reject(err);
             Subcat.updateOne({_id: subId}, {$push: {questions: results._id} }, (err, res)=>{
@@ -149,6 +150,25 @@ exports.getActiveSubCategories = (catId)=>{
                 if(err) return reject(err);
                 resolve(result)
             })
+        })
+    })
+}
+
+
+exports.editSubcategory = (subId, newName)=>{
+    return new Promise((resolve, reject)=>{
+        Subcat.updateOne({_id: subId}, {$set: {subcatName: newName}}, (err, result)=>{
+            if(err) return reject(err);
+            resolve(result);
+        })
+    })
+}
+
+exports.editCategory = (catId, newName)=>{
+    return new Promise((resolve, reject)=>{
+        Category.updateOne({_id: catId}, {$set: {catName: newName}}, (err, result)=>{
+            if(err) return reject(err);
+            resolve(result);
         })
     })
 }

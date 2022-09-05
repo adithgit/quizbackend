@@ -1,5 +1,7 @@
 const JWTstrategy = require("passport-jwt").Strategy;
 
+
+// Same strategy for admin and user.
 const userJwtStrategy = () => new JWTstrategy(
     {
         secretOrKey: "secretkey",
@@ -11,8 +13,8 @@ const userJwtStrategy = () => new JWTstrategy(
             return token;
         },
     },
-    async (token, done) =>{ 
-        done(null, token.user);
+    async (token, done) =>{
+        return done(null, token.user);
     }
 );
 

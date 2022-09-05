@@ -2,15 +2,15 @@ const passport = require("passport");
 const signJwt = require("../authentication/jwt");
 const ConflictError = require("../errors/conflictError");
 const NotFoundError = require("../errors/notFoundError");
-const User = require("../models/user");
+const Admin = require('../models/admin');
 
-exports.createUser = async (req, res, next) => {
+exports.createAdmin = async (req, res, next) => {
     try {
         // Creating new user
         console.log(req.body);
-        const user = await User.create(req.body);
+        const admin = await Admin.create(req.body);
 
-        return user;
+        return admin;
     } catch (e) {
         // Throwing an error if there is a user exist with same email
         if (e.keyValue && e.keyValue.email) return next(new ConflictError(`An account with email ${e.keyValue.email} aready exists!`, 'Conflict occured on user registration'));
@@ -25,18 +25,19 @@ exports.createUser = async (req, res, next) => {
 
 
 exports.login = (req, res, next, done) => {
-    passport.authenticate('userLogin', (e, user, response) => {
+    passport.authenticate('adminLogin', (e, admin, response) => {
         try {
-            
-            if (e || !user) throw new NotFoundError(e || response.message);
+            if (e || !admin) throw new NotFoundError(e || response.message);
             // Creating new authentication token
-            signJwt(req, user, (e, token) => {
+            admin = admin.toObject();
+            admin.admin = true;
+            signJwt(req, admin, (e, token) => {
                 if(e) return done(e);
                 
                 const auth = {
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
+                    _id: admin._id,
+                    name: admin.name,
+                    email: admin.email,
                     authToken: token
                 }
                 return done(null, auth);

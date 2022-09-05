@@ -6,8 +6,9 @@ const passport = require("passport");
 const db = require("./database/db");
 const router = require("./routes/router");
 const NotFoundError = require("./errors/notFoundError");
-const userLocalStrategy = require("./authentication/localStrategy");
+const userLocalStrategy = require("./authentication/userLocalStrategy");
 const userJwtStrategy = require("./authentication/jwtStartegy");
+const adminLocalStrategy = require("./authentication/adminLocalStrategy");
 
 const app = express();
 const port = process.env.PORT;
@@ -22,7 +23,8 @@ app.use(cookieParser());
 app.use(cors({ credentials: true, origin: true }));
 
 // User
-passport.use("login", userLocalStrategy());
+passport.use("userLogin", userLocalStrategy());
+passport.use("adminLogin", adminLocalStrategy());
 passport.use("jwt", userJwtStrategy());
 
 // Routes
