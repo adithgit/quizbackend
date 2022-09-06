@@ -33,7 +33,7 @@ exports.addSubCategories = async (req, res) => {
 }
 
 exports.getSubCategories = async (req, res) => {
-    if (!req.params.catId) return res.status(401).json({ message: 'catId not defined' })
+    if (!req.params.catId) return res.status(401).json({ message: 'catId not defined' });
     try {
         const result = await questionsServices.getSubCategory(req.params.catId);
         res.status(200).json({ message:'Subcategories', data: result });
@@ -43,10 +43,11 @@ exports.getSubCategories = async (req, res) => {
 }
 
 exports.addQuestion = async (req, res) => {
-    const { questionDef, options, answerIndex, subCat,  points } = req.body;
-    if (!questionDef || !options || !answerIndex || !subCat) return res.status(401).json({ message: 'questionData not defined' });
+    if(!req.body.subCat || !req.body.options.split) return res.status(401).json({ message: 'parameters not defined' })
     try {
-        const result = await questionsServices.addQuestions(subCat, { questionDef, options, answerIndex, subCat, points });
+        const optionsArray = req.body.options.split(',');
+        req.body.options = optionsArray;
+        const result = await questionsServices.addQuestions(req.body.subCat, req.body);
         res.status(200).json({ message:'questoin added', data: result });
     } catch (e) {
         res.status(500).send({ message: e.toString() });

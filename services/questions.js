@@ -44,7 +44,10 @@ exports.getSubCategory = (categoryId)=>{
     return new Promise((resolve, reject)=>{
         Category.findOne({_id: categoryId }, (err, docs)=>{
             if(err || !docs) return reject(err || 'categoryId not valid');
-            resolve(docs.subCategories);
+            Subcat.find({_id:  {$in :docs.subCategories}}, (err, subCategories)=>{
+                if(err) return reject(err)
+                resolve(subCategories);
+            })
         })
     })
 }
@@ -60,13 +63,7 @@ exports.getQuestions = (subId)=>{
 
 exports.addQuestions = (subId, questionData)=>{
     return new Promise((resolve, reject)=>{
-        new Questions({
-            questionDef: questionData.questionDef,
-            options: questionData.options,
-            answerIndex: questionData.answerIndex,
-            subCat: questionData.subCat,
-            points: questionData.points
-        }).save((err, results)=>{
+        new Questions(questionData).save((err, results)=>{
             if(err) return reject(err);
             Subcat.updateOne({_id: subId}, {$push: {questions: results._id} }, (err, res)=>{
                 resolve(results);
