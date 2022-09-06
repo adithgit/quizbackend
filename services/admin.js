@@ -39,6 +39,7 @@ exports.login = (req, res, next, done) => {
                     _id: admin._id,
                     name: admin.name,
                     email: admin.email,
+                    adminType: admin.admintype,
                     authToken: token
                 }
                 return done(null, auth);

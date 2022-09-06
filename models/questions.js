@@ -19,7 +19,18 @@ const questionSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    points: Number
+    answerDef: {
+        type: String,
+        required: true
+    },
+    negative: {
+        type: Number,
+        required: true
+    },
+    points: {
+        type: Number,
+        required: true
+    }
 });
 
 

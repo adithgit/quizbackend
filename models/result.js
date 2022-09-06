@@ -21,7 +21,7 @@ const resultSchema = new Schema({
     },
     timestamp:{
         type: Date,
-        default: Date.now
+        required: true
     },
     totalpoints: {
         type: Number,

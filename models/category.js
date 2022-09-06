@@ -10,9 +10,12 @@ const categorySchema = new Schema({
     },
     subCategories: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subcat'
+        ref: 'Subcat',
     }],
-    imageURL: String
+    imageURL: {
+        type: String,
+        required: true
+    }
 });
 
 

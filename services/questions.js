@@ -13,12 +13,11 @@ exports.getCategories = ()=>{
     })
 }
 
-exports.addCategory = (catName)=>{
+exports.addCategory = (catDetails)=>{
     return new Promise((resolve, reject)=>{
-        new Category({
-            catName,
-            subCategories:[]
-        }).save((err, result)=>{
+        new Category(
+            catDetails
+        ).save((err, result)=>{
             if(err) return reject(err);
             resolve(result);
         })

@@ -11,8 +11,7 @@ router.use(authenticateUser);
 // Public Routes
 router.post('/result', questionsController.addResult);
 router.get('/category', questionsController.getCategories);
-router.get('/subcategory/:catId', questionsController.getSubCategories);
 router.get('/quiz/:subId', questionsController.getQuestions);
-
+router.get('/active/:catId', questionsController.getActiveSubCategories);
 
 module.exports = router;

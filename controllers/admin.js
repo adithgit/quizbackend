@@ -15,10 +15,10 @@ exports.register = async (req, res, next) => {
             if (e) throw new Error(e);
 
             // Sending the new user as response
-            res.status(201).json(admin);
+            res.status(201).json({message:'admin created and logged in', data: admin});
         });
     } catch (e) {
-        res.status(409).json(e.toString());
+        res.status(409).json({message: e.toString()});
     }
 }
 
@@ -29,9 +29,9 @@ exports.login = (req, res, next) => {
             if (e) throw new Error(e.toString())
 
             // Sending user data as response
-            res.status(200).json(admin);
+            res.status(200).json({message: 'login success', data: admin});
         } catch (e) {
-            res.status(409).send(e.toString());
+            res.status(409).send({message: e.toString()});
         }
     });
 }
